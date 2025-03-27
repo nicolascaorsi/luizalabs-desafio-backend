@@ -1,19 +1,18 @@
 version: '3.8'
-
+name: luizalabs-desafio-backend
 services:
   app:
     build: 
       context: .
       dockerfile: Dockerfile
-
+      
     volumes:
       - ../..:/workspaces:cached
-      
-    # Overrides default command so things don't shut down after the process ends.
+      # - /var/run/docker.sock:/var/run/docker.sock
     command: sleep infinity
-
+    environment:
+      TESTCONTAINERS_RYUK_DISABLED: "true" # Desabilita Ryuk temporariamente
     # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
-    network_mode: service:db
 
     # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
     # (Adding the "ports" property to this file will not forward from a Codespace.)
@@ -35,7 +34,7 @@ services:
       - cloudbeaver:/opt/cloudbeaver/workspace
     ports:
       - 8978:8978
-
+ 
     # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 

@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    // "$schema": "vscode://schemas/launch",   
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Integration Tests",
+            "runtimeExecutable": "npm",
+            "cwd": "${workspaceFolder}/customers-favorite-products-api",
+            "runtimeArgs": ["run", "test:integration:debug"],
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ],
+            "console": "integratedTerminal"
+            // "program": "${workspaceFolder}/customers-favorite-products-api/src/features/customers/persistence/typeorm/__tests__/integration/customers-repository-typeorm.spec.ts",
+            // "outFiles": [
+            //     "${workspaceFolder}/**/*.js"
+            // ]
+        }
+    ]
+}
