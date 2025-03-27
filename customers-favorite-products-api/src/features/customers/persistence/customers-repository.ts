@@ -9,4 +9,5 @@ export abstract class CustomersRepository {
   abstract update(customerData: UpdateData): Promise<void>;
   abstract find(options: FindOptions): Promise<Customer | null>;
   abstract findPaginated(options: FindPaginatedOptions): Promise<Customer[]>;
+  abstract delete(id: string): Promise<void>;
 }

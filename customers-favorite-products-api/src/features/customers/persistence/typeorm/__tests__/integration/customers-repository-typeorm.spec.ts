@@ -13,13 +13,19 @@ describe('CustomersRepositoryTypeOrm Integration Test', () => {
   let rawTypeOrmRepository: Repository<CustomerTypeOrm>;
 
   beforeAll(async () => {
-    dataSource = new IntegrationTestDataSource('test_customer_repository', globalThis.postgresConnectionUri);
+    dataSource = new IntegrationTestDataSource(
+      'test_customer_repository',
+      globalThis.postgresConnectionUri,
+    );
     await dataSource.initialize();
     const loggerMock: Logger = {
       error: jest.fn(),
     };
     rawTypeOrmRepository = dataSource.getRepository(CustomerTypeOrm);
-    customersRepository = new CustomersRepositoryTypeOrm(rawTypeOrmRepository, loggerMock);
+    customersRepository = new CustomersRepositoryTypeOrm(
+      rawTypeOrmRepository,
+      loggerMock,
+    );
   });
 
   afterAll(async () => {
@@ -32,10 +38,15 @@ describe('CustomersRepositoryTypeOrm Integration Test', () => {
 
   describe('create', () => {
     it('should create a customer', async () => {
-      const customerToInsert = new Customer({ name: 'John', email: 'john@test.com' });
+      const customerToInsert = new Customer({
+        name: 'John',
+        email: 'john@test.com',
+      });
 
-      const insertedCustomer = await customersRepository.create(customerToInsert);
-      const [customersInDatabase, customersCount] = await rawTypeOrmRepository.findAndCount();
+      const insertedCustomer =
+        await customersRepository.create(customerToInsert);
+      const [customersInDatabase, customersCount] =
+        await rawTypeOrmRepository.findAndCount();
 
       expect(insertedCustomer).toEqual(customerToInsert);
       expect(customersCount).toBe(1);
@@ -47,14 +58,20 @@ describe('CustomersRepositoryTypeOrm Integration Test', () => {
     });
 
     it('should throw EmailDuplicatedError when a previous customer has registered email before', async () => {
-      const customerToInsert1 = new Customer({ name: 'Masters', email: 'mastodonte@test.com' });
-      const customerToInsert2 = new Customer({ name: 'Claudinho', email: 'mastodonte@test.com' });
+      const customerToInsert1 = new Customer({
+        name: 'Masters',
+        email: 'mastodonte@test.com',
+      });
+      const customerToInsert2 = new Customer({
+        name: 'Claudinho',
+        email: 'mastodonte@test.com',
+      });
 
       await customersRepository.create(customerToInsert1);
 
-      await expect(customersRepository.create(customerToInsert2)).rejects.toThrow(
-        new EmailDuplicatedError(customerToInsert1.email),
-      );
+      await expect(
+        customersRepository.create(customerToInsert2),
+      ).rejects.toThrow(new EmailDuplicatedError(customerToInsert1.email));
     });
   });
 
@@ -63,24 +80,39 @@ describe('CustomersRepositoryTypeOrm Integration Test', () => {
       const customer = new Customer({ name: 'John', email: 'john@test.com' });
       await rawTypeOrmRepository.insert(customer);
 
-      const customerWithUpdates: UpdateData = { id: customer.id, name: 'John Updated', email: 'john-UPDATED@test.com' };
+      const customerWithUpdates: UpdateData = {
+        id: customer.id,
+        name: 'John Updated',
+        email: 'john-UPDATED@test.com',
+      };
       await customersRepository.update(customerWithUpdates);
 
-      expect(await rawTypeOrmRepository.findOneBy({ id: customer.id })).toMatchObject(<CustomerTypeOrm>{
+      expect(
+        await rawTypeOrmRepository.findOneBy({ id: customer.id }),
+      ).toMatchObject(<CustomerTypeOrm>{
         name: customerWithUpdates.name,
         email: customerWithUpdates.email?.toLocaleLowerCase(),
       });
     });
 
     it('should throw EmailDuplicatedError when a previous customer has registered email', async () => {
-      const customer = new Customer({ name: 'Masters', email: 'mastodonte@test.com' });
-      const customer2 = new Customer({ name: 'Masters', email: 'customer2@test.com' });
+      const customer = new Customer({
+        name: 'Masters',
+        email: 'mastodonte@test.com',
+      });
+      const customer2 = new Customer({
+        name: 'Masters',
+        email: 'customer2@test.com',
+      });
       await rawTypeOrmRepository.insert([customer, customer2]);
 
-      const customerWithSameEmail: UpdateData = { id: customer2.id, email: 'mastodonte@test.com' };
-      await expect(customersRepository.update(customerWithSameEmail)).rejects.toThrow(
-        new EmailDuplicatedError(customer.email),
-      );
+      const customerWithSameEmail: UpdateData = {
+        id: customer2.id,
+        email: 'mastodonte@test.com',
+      };
+      await expect(
+        customersRepository.update(customerWithSameEmail),
+      ).rejects.toThrow(new EmailDuplicatedError(customer.email));
     });
   });
 
@@ -106,7 +138,8 @@ describe('CustomersRepositoryTypeOrm Integration Test', () => {
   describe('findAll', () => {
     it('should paginate customers', async () => {
       const customers = [...Array(10).keys()].map(
-        (i) => new Customer({ name: `User ${i}`, email: `email-${i}@mail.com` }),
+        (i) =>
+          new Customer({ name: `User ${i}`, email: `email-${i}@mail.com` }),
       );
       await rawTypeOrmRepository.insert(customers);
 
@@ -132,6 +165,26 @@ describe('CustomersRepositoryTypeOrm Integration Test', () => {
       expect(page3).toHaveLength(2);
       expect(page4).toHaveLength(0);
       expect(page1[0]).toBeInstanceOf(Customer);
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete existing customer', async () => {
+      const customer = new Customer({
+        name: 'Caludomiro',
+        email: `email@mail.com`,
+      });
+      await rawTypeOrmRepository.insert(customer);
+
+      await customersRepository.delete(customer.id);
+
+      expect(
+        await rawTypeOrmRepository.findOneBy({ id: customer.id }),
+      ).toBeNull();
+    });
+
+    it('should not throw error when customer does not exists', async () => {
+      expect(await customersRepository.delete('abc')).toBeUndefined();
     });
   });
 });
