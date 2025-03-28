@@ -1,11 +1,11 @@
 import { UpdateData } from '@customers/persistence/customers-repository';
 import { Logger } from 'config/logger';
 import { DataSource, Repository } from 'typeorm';
+import { TestDataSource } from '../../../../../../__tests__/config/test-data-source';
 import { Customer } from '../../../../domain/customer.entity';
 import { EmailDuplicatedError } from '../../../../domain/email-duplicated-error';
 import { CustomerTypeOrm } from '../../customer.typeorm';
 import { CustomersRepositoryTypeOrm } from '../../customers-repository-typeorm';
-import { IntegrationTestDataSource } from './integration-test-data-source';
 
 describe('CustomersRepositoryTypeOrm Integration Test', () => {
   let dataSource: DataSource;
@@ -13,10 +13,7 @@ describe('CustomersRepositoryTypeOrm Integration Test', () => {
   let rawTypeOrmRepository: Repository<CustomerTypeOrm>;
 
   beforeAll(async () => {
-    dataSource = new IntegrationTestDataSource(
-      'test_customer_repository',
-      globalThis.postgresConnectionUri,
-    );
+    dataSource = new TestDataSource('test_customer_repository');
     await dataSource.initialize();
     const loggerMock: Logger = {
       error: jest.fn(),

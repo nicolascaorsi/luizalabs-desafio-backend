@@ -2,6 +2,9 @@ import type { Config } from 'jest';
 
 const config: Config = {
   moduleFileExtensions: ['js', 'json', 'ts'],
+  setupFilesAfterEnv: [
+    '<rootDir>/__tests__/integration/setup-files-after-env.ts',
+  ],
   rootDir: 'src',
   testEnvironment: 'node',
   testRegex: '.e2e-spec.ts$',

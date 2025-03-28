@@ -17,10 +17,20 @@
                 "**/node_modules/**"
             ],
             "console": "integratedTerminal"
-            // "program": "${workspaceFolder}/customers-favorite-products-api/src/features/customers/persistence/typeorm/__tests__/integration/customers-repository-typeorm.spec.ts",
-            // "outFiles": [
-            //     "${workspaceFolder}/**/*.js"
-            // ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug e2e Tests",
+            "runtimeExecutable": "npm",
+            "cwd": "${workspaceFolder}/customers-favorite-products-api",
+            "runtimeArgs": ["run", "test:e2e:debug"],
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ],
+            "console": "integratedTerminal"
         }
+
     ]
 }
