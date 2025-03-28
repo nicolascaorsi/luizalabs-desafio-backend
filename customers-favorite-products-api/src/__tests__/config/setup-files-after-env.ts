@@ -16,8 +16,6 @@ beforeAll(async () => {
   postgresClient = new Client(postgresContainer.getConnectionUri());
   await postgresClient.connect();
   globalThis.postgresConnectionUri = postgresContainer.getConnectionUri();
-  // globalThis.postgresClient = postgresClient
-  // globalThis.postgresContainer = postgresContainer
 });
 
 afterAll(async () => {
