@@ -26,7 +26,10 @@ describe('CustomersServiceDefault', () => {
       };
       const expectedCustomer = new Customer(request);
       when(mockRepository.create)
-        .calledWith(expect.objectContaining(request))
+        .calledWith({
+          ...request,
+          id: expect.any(String),
+        })
         .mockResolvedValue(expectedCustomer);
 
       const result = await service.create(request);
