@@ -8,6 +8,10 @@ const config: Config = {
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
+  moduleNameMapper: {
+    '^@customers/(.*)$': '<rootDir>/features/customers/$1',
+    '^@config/(.*)$': '<rootDir>/config/$1',
+  },
 };
 
 export default config;
