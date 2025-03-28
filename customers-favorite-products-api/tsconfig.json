@@ -12,7 +12,7 @@
     "baseUrl": "./src",
     "paths": {
       "@customers/*": ["features/customers/*"],
-      "@config/*": ["config/*"],
+      "@config/*": ["config/*"]
     },
     "incremental": true,
     "skipLibCheck": true,

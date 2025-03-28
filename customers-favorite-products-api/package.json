@@ -22,7 +22,10 @@
     "test:integration:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand --config jest.config.integration.ts",
     "test:e2e": "jest --config jest.config.e2e.ts --detectOpenHandles",
     "test:e2e:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand --config jest.config.e2e.ts",
-    "test:e2e:dev": "npm run test:e2e"
+    "test:e2e:dev": "npm run test:e2e",
+    "migration:generate": "cd migrations && node --env-file=../.development.env -r ts-node/register -r tsconfig-paths/register ../node_modules/typeorm/cli.js migration:generate --pretty -d ../src/config/migrations-data-source.ts",
+    "migration:run": "node --env-file=.development.env -r ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/config/migrations-data-source.ts",
+    "migration:revert": "node --env-file=.development.env -r ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d ./src/config/migrations-data-source.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
