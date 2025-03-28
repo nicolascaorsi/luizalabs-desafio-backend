@@ -64,9 +64,10 @@ export class CustomersRepositoryTypeOrm implements CustomersRepository {
   }
 
   private async convertToExpectedError(
-    e: Error,
+    e: any,
     customer: Pick<Customer, 'email'>,
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const message = e?.message as string | undefined;
     if (message?.includes(UQ_CUSTOMER_EMAIL)) {
       return new EmailDuplicatedError(customer.email);
