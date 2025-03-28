@@ -1,5 +1,6 @@
 import { Logger } from '@config/logger';
 import { UnexpectedError } from '@config/unexpected-error';
+import { CustomerNotFoundError } from '@customers/domain/customer-not-found-error';
 import { Customer } from '@customers/domain/customer.entity';
 import { EmailDuplicatedError } from '@customers/domain/email-duplicated-error';
 import {
@@ -7,7 +8,7 @@ import {
   FindOptions,
   FindPaginatedOptions,
 } from '@customers/persistence/customers-repository';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { CustomerTypeOrm, UQ_CUSTOMER_EMAIL } from './customer.typeorm';
 
 export class CustomersRepositoryTypeOrm implements CustomersRepository {
@@ -26,8 +27,9 @@ export class CustomersRepositoryTypeOrm implements CustomersRepository {
   async update(
     customerData: Partial<Customer> & Pick<Customer, 'id'>,
   ): Promise<void> {
+    let updateResult: UpdateResult;
     try {
-      await this.customersRepository.update(customerData.id, {
+      updateResult = await this.customersRepository.update(customerData.id, {
         name: customerData.name,
         email: customerData.email?.toLocaleLowerCase(),
       });
@@ -36,6 +38,7 @@ export class CustomersRepositoryTypeOrm implements CustomersRepository {
         email: customerData.email ?? '',
       });
     }
+    if (updateResult?.affected === 0) throw new CustomerNotFoundError();
   }
   async find(criteria: FindOptions): Promise<Customer | null> {
     const customerTypeOrm = await this.customersRepository.findOneBy(criteria);
@@ -48,6 +51,9 @@ export class CustomersRepositoryTypeOrm implements CustomersRepository {
     const customersTypeOrm = await this.customersRepository.find({
       take: options.pageSize,
       skip,
+      order: {
+        createdAt: 'ASC',
+      },
     });
 
     return customersTypeOrm.map((c) => new Customer(c));
