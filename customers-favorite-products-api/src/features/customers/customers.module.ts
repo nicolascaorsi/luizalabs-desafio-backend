@@ -1,3 +1,4 @@
+import { Logger } from '@config/logger';
 import { CustomersRepository } from '@customers/persistence/customers-repository';
 import { Module } from '@nestjs/common';
 import { DataSource } from 'typeorm';
@@ -12,11 +13,12 @@ import { CustomersRepositoryTypeOrm } from './persistence/typeorm/customers-repo
   providers: [
     {
       provide: CustomersRepository,
-      inject: [DataSource],
-      useFactory: (ds: DataSource) =>
-        new CustomersRepositoryTypeOrm(ds.getRepository(CustomerTypeOrm), {
-          error: () => Promise.resolve(),
-        }),
+      inject: [DataSource, Logger],
+      useFactory: (ds: DataSource, logger: Logger) =>
+        new CustomersRepositoryTypeOrm(
+          ds.getRepository(CustomerTypeOrm),
+          logger,
+        ),
     },
     {
       provide: CustomersService,

@@ -1,19 +1,29 @@
-import { Module } from '@nestjs/common';
+import { ConsoleLogger } from '@config/console-logger';
+import { Logger } from '@config/logger';
+import { CustomersModule } from '@customers/customers.module';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { DatabaseModule } from './database/database.module';
 
+const LOGGER_PROVIDER = {
+  provide: Logger,
+  useClass: ConsoleLogger,
+};
+@Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
       envFilePath: '.development.env',
       ignoreEnvFile: process.env.NODE_ENV === 'production',
-      isGlobal: true
+      isGlobal: true,
     }),
     DatabaseModule,
+    CustomersModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [LOGGER_PROVIDER],
+  exports: [LOGGER_PROVIDER],
 })
-export class AppModule { }
+export class AppModule {}
