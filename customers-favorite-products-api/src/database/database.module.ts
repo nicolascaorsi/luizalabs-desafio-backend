@@ -1,11 +1,14 @@
+import { defaultDataSourceOptions } from '@config/typeorm.data-source-options.config';
 import { Module } from '@nestjs/common';
+import { registerAs } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import databaseConfig from '../config/database.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync(databaseConfig.asProvider())
+    TypeOrmModule.forRootAsync(
+      registerAs('database', () => defaultDataSourceOptions).asProvider(),
+    ),
   ],
-  providers: []
+  providers: [],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}
