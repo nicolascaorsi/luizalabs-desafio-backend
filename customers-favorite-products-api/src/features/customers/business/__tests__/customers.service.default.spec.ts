@@ -19,11 +19,6 @@ describe('CustomersServiceDefault', () => {
     mockRepository = mock<CustomersRepository>();
     mockProductsService = mock<ProductsService>();
     service = new CustomersServiceDefault(mockRepository, mockProductsService);
-
-    // TODO não depender diretamente da variável de ambiente
-    process.env.PRODUCTS_API_URL =
-      process.env.PRODUCTS_API_URL ?? 'http://mock-products-server:8080';
-    // productsApiUrl = process.env.PRODUCTS_API_URL;
   });
 
   describe('create', () => {
