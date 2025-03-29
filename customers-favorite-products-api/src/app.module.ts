@@ -3,6 +3,7 @@ import { Logger } from '@config/logger';
 import { CustomersModule } from '@customers/customers.module';
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ProductsModule } from '@products/products.module';
 import configuration from './config/configuration';
 import { DatabaseModule } from './database/database.module';
 
@@ -20,6 +21,7 @@ const LOGGER_PROVIDER = {
       isGlobal: true,
     }),
     DatabaseModule,
+    ProductsModule,
     CustomersModule,
   ],
   controllers: [],
