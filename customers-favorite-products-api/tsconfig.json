@@ -13,7 +13,8 @@
     "paths": {
       "@customers/*": ["features/customers/*"],
       "@products/*": ["features/products/*"],
-      "@config/*": ["config/*"]
+      "@config/*": ["config/*"],
+      "@errors/*": ["errors/*"],
     },
     "incremental": true,
     "skipLibCheck": true,
