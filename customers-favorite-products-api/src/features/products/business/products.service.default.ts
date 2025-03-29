@@ -7,6 +7,7 @@ export class ProductsServiceDefault implements ProductsService {
   constructor(
     private repository: ProductsRepository,
     private requestDispatcher: HttpRequestDispatcher,
+    private productsApiUrl: string,
   ) {}
 
   async save(product: Product): Promise<Product> {
@@ -19,8 +20,7 @@ export class ProductsServiceDefault implements ProductsService {
       id: options.id,
     });
     if (!locallyPersistedProduct) {
-      const productsApiUrl = process.env.PRODUCTS_API_URL;
-      const productUrl = `${productsApiUrl}/products/${options.id}`;
+      const productUrl = `${this.productsApiUrl}/products/${options.id}`;
       const result = await this.requestDispatcher.get<Product>(productUrl);
       if (result.success) {
         const product = new Product(result.success);

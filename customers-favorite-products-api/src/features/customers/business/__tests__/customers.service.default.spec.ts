@@ -5,6 +5,7 @@ import {
   FindOptions,
   UpdateData,
 } from '@customers/persistence/customers-repository';
+import { ProductsService } from '@products/business/products.service';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 import { CustomersServiceDefault } from '../customers.service.default';
@@ -12,10 +13,17 @@ import { CustomersServiceDefault } from '../customers.service.default';
 describe('CustomersServiceDefault', () => {
   let service: CustomersServiceDefault;
   let mockRepository: CustomersRepository;
+  let mockProductsService: ProductsService;
 
   beforeEach(() => {
     mockRepository = mock<CustomersRepository>();
-    service = new CustomersServiceDefault(mockRepository);
+    mockProductsService = mock<ProductsService>();
+    service = new CustomersServiceDefault(mockRepository, mockProductsService);
+
+    // TODO não depender diretamente da variável de ambiente
+    process.env.PRODUCTS_API_URL =
+      process.env.PRODUCTS_API_URL ?? 'http://mock-products-server:8080';
+    // productsApiUrl = process.env.PRODUCTS_API_URL;
   });
 
   describe('create', () => {
@@ -71,6 +79,24 @@ describe('CustomersServiceDefault', () => {
       when(mockRepository.delete).calledWith('123').mockResolvedValue();
 
       await expect(service.delete('123')).resolves.not.toThrow();
+    });
+  });
+
+  describe('add favorites', () => {
+    it('should add favorite when products exists locally', async () => {
+      const customerId = 'abc';
+      const productId = '123';
+      await service.addFavorite(customerId, productId);
+
+      expect(mockProductsService.existsOrThrow).toHaveBeenCalledTimes(1);
+      expect(mockProductsService.existsOrThrow).toHaveBeenCalledWith({
+        id: productId,
+      });
+      expect(mockRepository.addFavorite).toHaveBeenCalledTimes(1);
+      expect(mockRepository.addFavorite).toHaveBeenCalledWith(
+        customerId,
+        productId,
+      );
     });
   });
 });

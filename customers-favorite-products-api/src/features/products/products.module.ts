@@ -28,7 +28,13 @@ import { ProductsRepositoryTypeOrm } from './persistence/typeorm/products-reposi
       useFactory: (
         repository: ProductsRepository,
         dispatcher: HttpRequestDispatcher,
-      ) => new ProductsServiceDefault(repository, dispatcher),
+      ) =>
+        new ProductsServiceDefault(
+          repository,
+          dispatcher,
+          //TODO carregar via Config
+          process.env.PRODUCTS_API_URL!,
+        ),
     },
   ],
   exports: [ProductsService],

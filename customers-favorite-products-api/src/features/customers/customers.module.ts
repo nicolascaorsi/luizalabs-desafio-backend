@@ -1,7 +1,11 @@
 import { Logger } from '@config/logger';
 import { CustomersRepository } from '@customers/persistence/customers-repository';
 import { Module } from '@nestjs/common';
+import { ProductsService } from '@products/business/products.service';
+import { ProductsModule } from '@products/products.module';
 import { DataSource } from 'typeorm';
+import { HttpRequestDispatcher } from '../products/business/request-dispatcher';
+import { HttpRequestDispatcherFetch } from '../products/business/request-dispatcher-fetch';
 import { CustomersController } from './api/customers.controller';
 import { CustomersService } from './business/customers.service';
 import { CustomersServiceDefault } from './business/customers.service.default';
@@ -10,6 +14,7 @@ import { CustomersRepositoryTypeOrm } from './persistence/typeorm/customers-repo
 import { CustomerFavoritedProductTypeOrm } from './persistence/typeorm/favorited-product.typeorm';
 
 @Module({
+  imports: [ProductsModule],
   controllers: [CustomersController],
   providers: [
     {
@@ -23,10 +28,16 @@ import { CustomerFavoritedProductTypeOrm } from './persistence/typeorm/favorited
         ),
     },
     {
+      provide: HttpRequestDispatcher,
+      useClass: HttpRequestDispatcherFetch,
+    },
+    {
       provide: CustomersService,
-      inject: [CustomersRepository],
-      useFactory: (repository: CustomersRepository) =>
-        new CustomersServiceDefault(repository),
+      inject: [CustomersRepository, ProductsService],
+      useFactory: (
+        repository: CustomersRepository,
+        productsService: ProductsService,
+      ) => new CustomersServiceDefault(repository, productsService),
     },
   ],
 })

@@ -1,3 +1,4 @@
+import { ProductsService } from '@products/business/products.service';
 import { Customer } from '../domain/customer.entity';
 import {
   CustomersRepository,
@@ -8,7 +9,10 @@ import {
 import { CreateCustomerRequest, CustomersService } from './customers.service';
 
 export class CustomersServiceDefault implements CustomersService {
-  constructor(private repository: CustomersRepository) {}
+  constructor(
+    private repository: CustomersRepository,
+    private productsService: ProductsService,
+  ) {}
 
   async create(request: CreateCustomerRequest): Promise<Customer> {
     const customerToCreate = new Customer(request);
@@ -28,10 +32,14 @@ export class CustomersServiceDefault implements CustomersService {
   }
 
   async delete(id: string): Promise<void> {
-    return await this.repository.delete(id);
+    await this.repository.delete(id);
   }
 
   async addFavorite(customerId: string, productId: string): Promise<void> {
+    await this.productsService.existsOrThrow({
+      id: productId,
+    });
+
     await this.repository.addFavorite(customerId, productId);
   }
 

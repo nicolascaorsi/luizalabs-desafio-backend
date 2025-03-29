@@ -9,20 +9,16 @@ describe('ProductsServiceDefault', () => {
   let service: ProductsServiceDefault;
   let mockRepository: ProductsRepository;
   let mockHttpRequestDispatcher: HttpRequestDispatcher;
-  let productsApiUrl: string;
+  const productsApiUrl = 'http://mock-products-server:8080';
+
   beforeEach(() => {
     mockRepository = mock<ProductsRepository>();
-
     mockHttpRequestDispatcher = mock<HttpRequestDispatcher>();
     service = new ProductsServiceDefault(
       mockRepository,
       mockHttpRequestDispatcher,
+      productsApiUrl,
     );
-
-    // TODO não depender diretamente da variável de ambiente
-    process.env.PRODUCTS_API_URL =
-      process.env.PRODUCTS_API_URL ?? 'http://mock-products-server:8080';
-    productsApiUrl = process.env.PRODUCTS_API_URL;
   });
 
   describe('existsOrThrow', () => {
