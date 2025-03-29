@@ -8,19 +8,11 @@ const config: Config = {
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
-  collectCoverageFrom: ['**/*.(t|j)s'],
-  coveragePathIgnorePatterns: [
-    'main.ts',
-    '.*(\\.|-)spec\\.ts$',
-    '.*\\.d\\.ts$',
-    '.*.dto\\.ts$',
-    '.*.module.ts',
-    '.*.repository.in-memory.ts',
-    '.*.test-builder.ts',
-    '__generated__/',
-  ],
+  collectCoverageFrom: ['<rootDir>/**/*.ts'],
+  coveragePathIgnorePatterns: ['__tests__/*'],
   moduleNameMapper: {
     '^@customers/(.*)$': '<rootDir>/features/customers/$1',
+    '^@products/(.*)$': '<rootDir>/features/products/$1',
     '^@config/(.*)$': '<rootDir>/config/$1',
   },
   coverageDirectory: '../coverage',
