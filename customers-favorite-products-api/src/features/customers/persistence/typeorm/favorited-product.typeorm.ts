@@ -1,6 +1,6 @@
 import { CustomerTypeOrm } from '@customers/persistence/typeorm/customer.typeorm';
+import { ProductTypeOrm } from '@products/persistence/typeorm/product.typeorm';
 import { CreateDateColumn, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
-import { ProductTypeOrm } from './product.typeorm';
 
 @Entity('customers_favorited_products')
 export class CustomerFavoritedProductTypeOrm {

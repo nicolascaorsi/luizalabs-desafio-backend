@@ -22,4 +22,6 @@ export abstract class CustomersService {
   abstract find(options: FindOptions): Promise<Customer | null>;
   abstract findPaginated(options: FindPaginatedOptions): Promise<Customer[]>;
   abstract delete(id: string): Promise<void>;
+  abstract addFavorite(customerId: string, productId: string): Promise<void>;
+  abstract deleteFavorite(customerId: string, productId: string): Promise<void>;
 }

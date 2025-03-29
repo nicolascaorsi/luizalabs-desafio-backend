@@ -6,6 +6,7 @@ import { Customer } from '../../../../domain/customer.entity';
 import { EmailDuplicatedError } from '../../../../domain/email-duplicated-error';
 import { CustomerTypeOrm } from '../../customer.typeorm';
 import { CustomersRepositoryTypeOrm } from '../../customers-repository-typeorm';
+import { CustomerFavoritedProductTypeOrm } from '../../favorited-product.typeorm';
 
 describe('CustomersRepositoryTypeOrm Integration Test', () => {
   let dataSource: DataSource;
@@ -21,6 +22,7 @@ describe('CustomersRepositoryTypeOrm Integration Test', () => {
     rawTypeOrmRepository = dataSource.getRepository(CustomerTypeOrm);
     customersRepository = new CustomersRepositoryTypeOrm(
       rawTypeOrmRepository,
+      dataSource.getRepository(CustomerFavoritedProductTypeOrm),
       loggerMock,
     );
   });

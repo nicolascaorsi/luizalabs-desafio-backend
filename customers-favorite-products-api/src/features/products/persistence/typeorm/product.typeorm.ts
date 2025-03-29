@@ -1,3 +1,4 @@
+import { CustomerFavoritedProductTypeOrm } from '@customers/persistence/typeorm/favorited-product.typeorm';
 import {
   Column,
   CreateDateColumn,
@@ -6,7 +7,6 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CustomerFavoritedProductTypeOrm } from './favorited-product.typeorm';
 
 @Entity('products')
 export class ProductTypeOrm {

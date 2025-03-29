@@ -8,12 +8,15 @@ import {
   FindOptions,
   FindPaginatedOptions,
 } from '@customers/persistence/customers-repository';
+import { CustomerFavoritedProductTypeOrm } from '@customers/persistence/typeorm/favorited-product.typeorm';
+import { ProductNotFoundError } from '@products/domain/product-not-found-error';
 import { Repository, UpdateResult } from 'typeorm';
 import { CustomerTypeOrm, UQ_CUSTOMER_EMAIL } from './customer.typeorm';
 
 export class CustomersRepositoryTypeOrm implements CustomersRepository {
   constructor(
     private customersRepository: Repository<CustomerTypeOrm>,
+    private favoritesRepository: Repository<CustomerFavoritedProductTypeOrm>,
     private readonly logger: Logger,
   ) {}
   async create(customer: Customer): Promise<Customer> {
@@ -63,6 +66,21 @@ export class CustomersRepositoryTypeOrm implements CustomersRepository {
     await this.customersRepository.delete(id);
   }
 
+  async addFavorite(customerId: string, productId: string): Promise<void> {
+    const result = await this.favoritesRepository.insert({
+      customerId,
+      productId,
+    });
+    if (result.identifiers.length === 0) {
+      throw new ProductNotFoundError(productId);
+    }
+  }
+  async deleteFavorite(customerId: string, productId: string): Promise<void> {
+    await this.favoritesRepository.delete({
+      customerId,
+      productId,
+    });
+  }
   private async convertToExpectedError(
     e: any,
     customer: Pick<Customer, 'email'>,

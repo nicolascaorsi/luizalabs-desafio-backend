@@ -7,6 +7,7 @@ import { CustomersService } from './business/customers.service';
 import { CustomersServiceDefault } from './business/customers.service.default';
 import { CustomerTypeOrm } from './persistence/typeorm/customer.typeorm';
 import { CustomersRepositoryTypeOrm } from './persistence/typeorm/customers-repository-typeorm';
+import { CustomerFavoritedProductTypeOrm } from './persistence/typeorm/favorited-product.typeorm';
 
 @Module({
   controllers: [CustomersController],
@@ -17,6 +18,7 @@ import { CustomersRepositoryTypeOrm } from './persistence/typeorm/customers-repo
       useFactory: (ds: DataSource, logger: Logger) =>
         new CustomersRepositoryTypeOrm(
           ds.getRepository(CustomerTypeOrm),
+          ds.getRepository(CustomerFavoritedProductTypeOrm),
           logger,
         ),
     },

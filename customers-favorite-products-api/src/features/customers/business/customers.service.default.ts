@@ -30,4 +30,12 @@ export class CustomersServiceDefault implements CustomersService {
   async delete(id: string): Promise<void> {
     return await this.repository.delete(id);
   }
+
+  async addFavorite(customerId: string, productId: string): Promise<void> {
+    await this.repository.addFavorite(customerId, productId);
+  }
+
+  async deleteFavorite(customerId: string, productId: string): Promise<void> {
+    await this.repository.deleteFavorite(customerId, productId);
+  }
 }

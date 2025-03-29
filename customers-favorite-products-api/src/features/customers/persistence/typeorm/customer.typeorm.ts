@@ -7,7 +7,7 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
-import { CustomerFavoritedProductTypeOrm } from '../../../favorite-products/persistence/typeorm/favorited-product.typeorm';
+import { CustomerFavoritedProductTypeOrm } from './favorited-product.typeorm';
 
 export const UQ_CUSTOMER_EMAIL = 'UQ_CUSTOMER_EMAIL';
 

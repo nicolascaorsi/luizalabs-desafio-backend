@@ -12,6 +12,7 @@
     "baseUrl": "./src",
     "paths": {
       "@customers/*": ["features/customers/*"],
+      "@products/*": ["features/products/*"],
       "@config/*": ["config/*"]
     },
     "incremental": true,
