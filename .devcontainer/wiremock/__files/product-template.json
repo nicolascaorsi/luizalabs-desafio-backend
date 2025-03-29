@@ -1,0 +1,8 @@
+{
+    "id": "{{request.pathSegments.[1]}}",
+    "price": {{numberFormat (randomDecimal lower=100 upper=10000) groupingUsed=false roundingMode='down' maximumFractionDigits=2}},
+    "image": "https://picsum.photos/id/{{request.pathSegments.[1]}}/200/300",
+    "brand": "Brand {{randomValue length=5 type='ALPHABETIC'}}",
+    "title": "Product {{request.pathSegments.[1]}}",
+    "reviewScore": {{numberFormat (randomDecimal lower=0 upper=5.0) groupingUsed=false roundingMode='down' maximumFractionDigits=2}}
+  }
