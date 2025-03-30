@@ -1,4 +1,5 @@
 import { Customer } from '@customers/domain/customer.entity';
+import { Product } from '@products/domain/product.entity';
 
 export type UpdateData = Partial<Customer> & Pick<Customer, 'id'>;
 export type FindOptions = Partial<Customer>;
@@ -12,4 +13,8 @@ export abstract class CustomersRepository {
   abstract delete(id: string): Promise<void>;
   abstract addFavorite(customerId: string, productId: string): Promise<void>;
   abstract deleteFavorite(customerId: string, productId: string): Promise<void>;
+  abstract findFavoritesPaginated(
+    customerId: string,
+    options: FindPaginatedOptions,
+  ): Promise<Product[]>;
 }

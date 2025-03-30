@@ -8,9 +8,14 @@ import {
   FindOptions,
   FindPaginatedOptions,
 } from '@customers/persistence/customers-repository';
-import { CustomerFavoritedProductTypeOrm } from '@customers/persistence/typeorm/favorited-product.typeorm';
+import {
+  CustomerFavoritedProductTypeOrm,
+  PK_CUSTOMERS_FAVORITES,
+} from '@customers/persistence/typeorm/favorited-product.typeorm';
 import { ProductNotFoundError } from '@products/domain/product-not-found-error';
-import { Repository, UpdateResult } from 'typeorm';
+import { Product } from '@products/domain/product.entity';
+import { ProductTypeOrm } from '@products/persistence/typeorm/product.typeorm';
+import { InsertResult, Repository, UpdateResult } from 'typeorm';
 import { CustomerTypeOrm, UQ_CUSTOMER_EMAIL } from './customer.typeorm';
 
 export class CustomersRepositoryTypeOrm implements CustomersRepository {
@@ -67,14 +72,46 @@ export class CustomersRepositoryTypeOrm implements CustomersRepository {
   }
 
   async addFavorite(customerId: string, productId: string): Promise<void> {
-    const result = await this.favoritesRepository.insert({
-      customerId,
-      productId,
-    });
-    if (result.identifiers.length === 0) {
+    let result: InsertResult;
+    try {
+      result = await this.favoritesRepository.insert({
+        customerId,
+        productId,
+      });
+    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      const isDuplicatedFavoriteError = e?.message?.includes(
+        PK_CUSTOMERS_FAVORITES,
+      );
+      if (isDuplicatedFavoriteError) {
+        return;
+      }
+      throw e;
+    }
+    if (result?.identifiers?.length === 0) {
       throw new ProductNotFoundError(productId);
     }
   }
+
+  async findFavoritesPaginated(
+    customerId: string,
+    options: FindPaginatedOptions,
+  ): Promise<Product[]> {
+    const skip = (options.page - 1) * options.pageSize;
+    const customerFavoritesProductsTypeOrm =
+      await this.favoritesRepository.manager
+        .createQueryBuilder(ProductTypeOrm, 'product')
+        .innerJoinAndSelect('product.customerFavoritedProducts', 'favorite')
+        .where('favorite.customerId = :customerId', { customerId })
+        .limit(options.pageSize)
+        .offset(skip)
+        .orderBy('favorite.createdAt', 'ASC')
+        .select('product')
+        .getMany();
+
+    return customerFavoritesProductsTypeOrm.map((p) => new Product(p));
+  }
+
   async deleteFavorite(customerId: string, productId: string): Promise<void> {
     await this.favoritesRepository.delete({
       customerId,

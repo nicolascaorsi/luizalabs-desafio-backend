@@ -7,6 +7,7 @@ import { DataSource } from 'typeorm';
 import { HttpRequestDispatcher } from '../products/business/request-dispatcher';
 import { HttpRequestDispatcherFetch } from '../products/business/request-dispatcher-fetch';
 import { CustomersController } from './api/customers.controller';
+import { FavoritesController } from './api/favorites.controller';
 import { CustomersService } from './business/customers.service';
 import { CustomersServiceDefault } from './business/customers.service.default';
 import { CustomerTypeOrm } from './persistence/typeorm/customer.typeorm';
@@ -15,7 +16,7 @@ import { CustomerFavoritedProductTypeOrm } from './persistence/typeorm/favorited
 
 @Module({
   imports: [ProductsModule],
-  controllers: [CustomersController],
+  controllers: [CustomersController, FavoritesController],
   providers: [
     {
       provide: CustomersRepository,

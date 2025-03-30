@@ -1,4 +1,5 @@
 import { ProductsService } from '@products/business/products.service';
+import { Product } from '@products/domain/product.entity';
 import { Customer } from '../domain/customer.entity';
 import {
   CustomersRepository,
@@ -35,15 +36,23 @@ export class CustomersServiceDefault implements CustomersService {
     await this.repository.delete(id);
   }
 
-  async addFavorite(customerId: string, productId: string): Promise<void> {
-    await this.productsService.existsOrThrow({
+  async addFavorite(customerId: string, productId: string): Promise<Product> {
+    const product = await this.productsService.existsOrThrow({
       id: productId,
     });
 
     await this.repository.addFavorite(customerId, productId);
+    return product;
   }
 
   async deleteFavorite(customerId: string, productId: string): Promise<void> {
     await this.repository.deleteFavorite(customerId, productId);
+  }
+
+  async findFavoritesPaginated(
+    customerId: string,
+    options: FindPaginatedOptions,
+  ): Promise<Product[]> {
+    return await this.repository.findFavoritesPaginated(customerId, options);
   }
 }
