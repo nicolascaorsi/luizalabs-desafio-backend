@@ -1,19 +1,32 @@
 import { CustomerTypeOrm } from '@customers/persistence/typeorm/customer.typeorm';
 import { ProductTypeOrm } from '@products/persistence/typeorm/product.typeorm';
-import { CreateDateColumn, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 
-@Entity('customers_favorited_products')
+export const PK_CUSTOMERS_FAVORITES = 'PK_CUSTOMERS_FAVORITES';
+@Entity('customers_favorites')
 export class CustomerFavoritedProductTypeOrm {
-  @PrimaryColumn()
+  @PrimaryColumn('uuid', { primaryKeyConstraintName: PK_CUSTOMERS_FAVORITES })
   customerId: string;
 
   @ManyToOne(() => CustomerTypeOrm)
+  @JoinColumn({
+    foreignKeyConstraintName: 'PK_CUSTOMERS_FAVORITES_CUSTOMER',
+  })
   customer: CustomerTypeOrm;
 
-  @PrimaryColumn()
+  @PrimaryColumn('uuid', { primaryKeyConstraintName: PK_CUSTOMERS_FAVORITES })
   productId: string;
 
   @ManyToOne(() => ProductTypeOrm)
+  @JoinColumn({
+    foreignKeyConstraintName: 'PK_CUSTOMERS_FAVORITES_PRODUCT',
+  })
   product: ProductTypeOrm;
 
   @CreateDateColumn()

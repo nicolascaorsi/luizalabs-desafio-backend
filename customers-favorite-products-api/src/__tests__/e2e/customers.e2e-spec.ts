@@ -6,6 +6,7 @@ import { Customer } from '@customers/domain/customer.entity';
 import { CustomerTypeOrm } from '@customers/persistence/typeorm/customer.typeorm';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { randomUUID } from 'node:crypto';
 import * as request from 'supertest';
 import { App } from 'supertest/types';
 import { DataSource } from 'typeorm';
@@ -134,7 +135,7 @@ describe('AppController (e2e)', () => {
 
     it('should return 404 when customer does not exists', async () => {
       const findResponse = await request(app.getHttpServer())
-        .get(`/customers/invalid-id`)
+        .get(`/customers/${randomUUID()}`)
         .send();
 
       expect(findResponse.statusCode).toBe(404);

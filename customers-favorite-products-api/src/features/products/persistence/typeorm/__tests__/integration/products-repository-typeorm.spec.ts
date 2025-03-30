@@ -3,6 +3,7 @@ import { DataSource, Repository } from 'typeorm';
 import { TestDataSource } from '../../../../../../__tests__/config/test-data-source';
 import { Product } from '../../../../domain/product.entity';
 
+import { randomUUID } from 'node:crypto';
 import { ProductTypeOrm } from '../../product.typeorm';
 import { ProductsRepositoryTypeOrm } from '../../products-repository-typeorm';
 
@@ -35,7 +36,7 @@ describe('ProductsRepositoryTypeOrm Integration Test', () => {
   describe('save', () => {
     it('should create a product when not exists', async () => {
       const productToInsert = new Product({
-        id: '123',
+        id: randomUUID(),
         brand: 'Xalingo',
         image: 'http://teste.com',
         price: 50_000,
@@ -59,7 +60,7 @@ describe('ProductsRepositoryTypeOrm Integration Test', () => {
 
     it('should update a product when it exists', async () => {
       const product = new Product({
-        id: '123',
+        id: randomUUID(),
         brand: 'Xalingo',
         image: 'http://teste.com',
         price: 50_000,
@@ -68,7 +69,7 @@ describe('ProductsRepositoryTypeOrm Integration Test', () => {
       });
       await productsRepository.save(product);
       const updatedProduct = new Product({
-        id: '123',
+        id: product.id,
         brand: 'Xalingo Editado',
         image: 'http://teste-editado.com',
         price: 51_000,

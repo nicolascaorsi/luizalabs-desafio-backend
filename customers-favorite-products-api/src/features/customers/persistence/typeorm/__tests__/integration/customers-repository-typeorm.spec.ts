@@ -1,5 +1,6 @@
 import { UpdateData } from '@customers/persistence/customers-repository';
 import { Logger } from 'config/logger';
+import { randomUUID } from 'node:crypto';
 import { DataSource, Repository } from 'typeorm';
 import { TestDataSource } from '../../../../../../__tests__/config/test-data-source';
 import { Customer } from '../../../../domain/customer.entity';
@@ -130,7 +131,7 @@ describe('CustomersRepositoryTypeOrm Integration Test', () => {
     });
 
     it('should return null when customer not exists', async () => {
-      expect(await customersRepository.find({ id: 'ABC' })).toBeNull();
+      expect(await customersRepository.find({ id: randomUUID() })).toBeNull();
     });
   });
 
@@ -183,7 +184,7 @@ describe('CustomersRepositoryTypeOrm Integration Test', () => {
     });
 
     it('should not throw error when customer does not exists', async () => {
-      expect(await customersRepository.delete('abc')).toBeUndefined();
+      expect(await customersRepository.delete(randomUUID())).toBeUndefined();
     });
   });
 });

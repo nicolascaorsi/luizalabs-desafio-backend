@@ -10,22 +10,22 @@ import {
 
 @Entity('products')
 export class ProductTypeOrm {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'uuid', primaryKeyConstraintName: 'PK_PRODUCTS' })
   id: string;
 
-  @Column()
+  @Column({ type: 'numeric', precision: 9, scale: 2 })
   price: number;
 
-  @Column()
+  @Column({ length: 2048 })
   image: string;
 
-  @Column()
+  @Column({ length: 500 })
   brand: string;
 
-  @Column()
+  @Column({ length: 500 })
   title: string;
 
-  @Column({ type: 'smallint', nullable: true })
+  @Column({ type: 'numeric', precision: 3, scale: 2, nullable: true })
   reviewScore: number | undefined;
 
   @OneToMany(() => CustomerFavoritedProductTypeOrm, (p) => p.product)

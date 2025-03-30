@@ -3,6 +3,7 @@ import { Product } from '@products/domain/product.entity';
 import { ProductsRepository } from '@products/persistence/products-repository';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
+import { randomUUID } from 'node:crypto';
 import { ProductsServiceDefault } from '../products.service.default';
 import { DispatcherResponse } from '../request-dispatcher';
 describe('ProductsServiceDefault', () => {
@@ -23,7 +24,7 @@ describe('ProductsServiceDefault', () => {
 
   describe('existsOrThrow', () => {
     it('should not throw when product exists in main database', async () => {
-      const productId = '123';
+      const productId = randomUUID();
       const product = mock<Product>();
       when(mockRepository.find)
         .calledWith({ id: productId })
@@ -35,7 +36,7 @@ describe('ProductsServiceDefault', () => {
     });
 
     it('should add favorite when products does not exists locally', async () => {
-      const productId = '123';
+      const productId = randomUUID();
       const product = new Product({
         id: productId,
         price: 5027.28,

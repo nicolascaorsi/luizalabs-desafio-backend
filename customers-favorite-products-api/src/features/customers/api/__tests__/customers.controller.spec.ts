@@ -4,6 +4,7 @@ import { FindPaginatedOptions } from '@customers/persistence/customers-repositor
 import { Test, TestingModule } from '@nestjs/testing';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
+import { randomUUID } from 'node:crypto';
 import { CustomersController } from '../customers.controller';
 import { CreateCustomerRequest } from '../dto/create-customer-request';
 import { UpdateCustomerRequest } from '../dto/update-customer-request';
@@ -42,10 +43,12 @@ describe('CustomersController', () => {
 
   describe('update', () => {
     it('should call service with provided update data', async () => {
-      const customerId = '123';
+      const customerId = randomUUID();
       const request: UpdateCustomerRequest = mock();
 
-      await expect(controller.update('123', request)).resolves.not.toThrow();
+      await expect(
+        controller.update(customerId, request),
+      ).resolves.not.toThrow();
       expect(mockCustomersService.update).toHaveBeenCalledWith({
         id: customerId,
         ...request,
@@ -81,7 +84,7 @@ describe('CustomersController', () => {
   });
   describe('delete', () => {
     it('should call service with provided id to delete', async () => {
-      const customerId = '123';
+      const customerId = randomUUID();
 
       await expect(controller.delete(customerId)).resolves.not.toThrow();
       expect(mockCustomersService.delete).toHaveBeenCalledWith(customerId);
