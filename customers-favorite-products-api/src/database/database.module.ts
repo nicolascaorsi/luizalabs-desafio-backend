@@ -6,7 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   imports: [
     TypeOrmModule.forRootAsync(
-      registerAs('database', () => defaultDataSourceOptions).asProvider(),
+      registerAs('database', () => ({
+        ...defaultDataSourceOptions,
+        url: process.env.DATABASE_URL,
+      })).asProvider(),
     ),
   ],
   providers: [],
