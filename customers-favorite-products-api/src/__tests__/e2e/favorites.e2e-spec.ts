@@ -2,7 +2,7 @@ import { CreateFavoriteRequest } from '@customers/api/dto/create-favorite-reques
 import { Customer } from '@customers/domain/customer.entity';
 import { CustomerTypeOrm } from '@customers/persistence/typeorm/customer.typeorm';
 import { CustomerFavoritedProductTypeOrm } from '@customers/persistence/typeorm/favorited-product.typeorm';
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Product } from '@products/domain/product.entity';
 import { ProductTypeOrm } from '@products/persistence/typeorm/product.typeorm';
@@ -57,6 +57,16 @@ describe('Favorites (e2e)', () => {
     expect(listMyFavoritesResponse.statusCode).toBe(200);
     expect(Array.isArray(listMyFavoritesResponse.body)).toBe(true);
     expect(listMyFavoritesResponse.body).toHaveLength(1);
+  });
+
+  it('não deve permitir acesso aos favoritos de outro usuário /customer/:id (GET)', async () => {
+    const [customer, customer2] = await insertCustomer(dataSource, 2);
+
+    const response = await request(app.getHttpServer())
+      .get(`/customers/${customer.id}/favorites`)
+      .auth(getJwtToken(app, customer2), { type: 'bearer' });
+
+    expect(response.statusCode).toBe(HttpStatus.FORBIDDEN);
   });
 
   it('deve conseguir adicionar um novo produto como favorito', async () => {

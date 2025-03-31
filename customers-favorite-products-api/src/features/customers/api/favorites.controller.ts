@@ -9,18 +9,21 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { Product } from '@products/domain/product.entity';
 import { CustomersService } from '../business/customers.service';
 import { CreateFavoriteRequest } from './dto/create-favorite-request';
+import { OnlyOwnerCanAccessGuard } from './only-owner-can-access.guard';
 
-@Controller('customers/:customerId/favorites')
+@Controller('customers/:id/favorites')
+@UseGuards(OnlyOwnerCanAccessGuard)
 export class FavoritesController {
   constructor(private readonly customersService: CustomersService) {}
 
   @Post()
   async create(
-    @Param('customerId') customerId: string,
+    @Param('id') customerId: string,
     @Body() request: CreateFavoriteRequest,
   ): Promise<Product> {
     try {
@@ -38,7 +41,7 @@ export class FavoritesController {
 
   @Get()
   async findPaginated(
-    @Param('customerId') customerId: string,
+    @Param('id') customerId: string,
     @Query('page') page: number = 1,
     @Query('pageSize') pageSize: number = 10,
   ): Promise<Product[]> {
@@ -51,7 +54,7 @@ export class FavoritesController {
   @Delete(':productId')
   @HttpCode(204)
   async delete(
-    @Param('customerId') customerId: string,
+    @Param('id') customerId: string,
     @Param('productId') productId: string,
   ): Promise<void> {
     await this.customersService.deleteFavorite(customerId, productId);
