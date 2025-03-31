@@ -1,3 +1,4 @@
+import { AuthModule } from '@auth/auth.module';
 import { ConsoleLogger } from '@config/console-logger';
 import { Logger } from '@config/logger';
 import { CustomersModule } from '@customers/customers.module';
@@ -20,6 +21,7 @@ const LOGGER_PROVIDER = {
       ignoreEnvFile: process.env.NODE_ENV === 'production',
       isGlobal: true,
     }),
+    AuthModule,
     DatabaseModule,
     ProductsModule,
     CustomersModule,

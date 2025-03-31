@@ -14,6 +14,7 @@ import { AppModule } from '../../app.module';
 import { DatabaseModule } from '../../database/database.module';
 import { TestDataSource } from '../config/test-data-source';
 import { TestDatabaseModule } from '../config/test-database.module';
+import { getJwtToken, insertCustomer } from '../utils';
 
 describe('Favorites (e2e)', () => {
   jest.setTimeout(60000);
@@ -48,6 +49,7 @@ describe('Favorites (e2e)', () => {
 
     const listMyFavoritesResponse = await request(app.getHttpServer())
       .get(`/customers/${customer.id}/favorites`)
+      .auth(getJwtToken(app, customer), { type: 'bearer' })
       .send(<CreateFavoriteRequest>{
         productId: product.id,
       });
@@ -63,6 +65,7 @@ describe('Favorites (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .post(`/customers/${customer.id}/favorites`)
+      .auth(getJwtToken(app, customer), { type: 'bearer' })
       .send(<CreateFavoriteRequest>{
         productId: product.id,
       });
@@ -76,6 +79,7 @@ describe('Favorites (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .post(`/customers/${customer.id}/favorites`)
+      .auth(getJwtToken(app, customer), { type: 'bearer' })
       .send(<CreateFavoriteRequest>{
         productId: randomUUID(),
       });
@@ -88,6 +92,7 @@ describe('Favorites (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .delete(`/customers/${customer.id}/favorites/${product.id}`)
+      .auth(getJwtToken(app, customer), { type: 'bearer' })
       .send();
 
     expect(response.statusCode).toBe(204);
@@ -98,6 +103,7 @@ describe('Favorites (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .delete(`/customers/${customer.id}/favorites/${randomUUID()}`)
+      .auth(getJwtToken(app, customer), { type: 'bearer' })
       .send();
 
     expect(response.statusCode).toBe(204);
@@ -108,11 +114,13 @@ describe('Favorites (e2e)', () => {
 
     const addFavoriteResponse = await request(app.getHttpServer())
       .post(`/customers/${customer.id}/favorites`)
+      .auth(getJwtToken(app, customer), { type: 'bearer' })
       .send(<CreateFavoriteRequest>{
         productId: product.id,
       });
     const listMyFavoritesResponse = await request(app.getHttpServer())
       .get(`/customers/${customer.id}/favorites`)
+      .auth(getJwtToken(app, customer), { type: 'bearer' })
       .send(<CreateFavoriteRequest>{
         productId: product.id,
       });
@@ -122,14 +130,6 @@ describe('Favorites (e2e)', () => {
     expect(listMyFavoritesResponse.body).toHaveLength(1);
   });
 });
-
-async function insertCustomer(dataSource: TestDataSource, count: number) {
-  const customers = [...Array(count).keys()].map(
-    (i) => new Customer({ name: `User ${i}`, email: `email-${i}@mail.com` }),
-  );
-  await dataSource.getRepository(CustomerTypeOrm).insert(customers);
-  return customers.map((c) => new Customer(c));
-}
 
 async function insertProducts(dataSource: TestDataSource, count: number) {
   const products = [...Array(count).keys()].map(
@@ -147,7 +147,9 @@ async function insertProducts(dataSource: TestDataSource, count: number) {
   return products.map((p) => new Product(p));
 }
 
-async function insertCustomerWithFavorite(dataSource: TestDataSource) {
+async function insertCustomerWithFavorite(
+  dataSource: TestDataSource,
+): Promise<[Customer, Product]> {
   const customer = new Customer({
     id: randomUUID(),
     name: `User`,

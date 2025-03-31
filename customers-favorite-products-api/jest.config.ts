@@ -14,6 +14,7 @@ const config: Config = {
     '^@customers/(.*)$': '<rootDir>/features/customers/$1',
     '^@products/(.*)$': '<rootDir>/features/products/$1',
     '^@config/(.*)$': '<rootDir>/config/$1',
+    '^@auth/(.*)$': '<rootDir>/features/auth/$1',
     '^@errors/(.*)$': '<rootDir>/errors/$1',
   },
   coverageDirectory: '../coverage',

@@ -1,3 +1,4 @@
+import { Public } from '@auth/decorators/public.decorator';
 import { CustomerNotFoundError } from '@customers/domain/customer-not-found-error';
 import {
   Body,
@@ -22,6 +23,7 @@ import { UpdateCustomerRequest } from './dto/update-customer-request';
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
+  @Public()
   @Post()
   async create(
     @Body() createCustomerRequest: CreateCustomerRequest,

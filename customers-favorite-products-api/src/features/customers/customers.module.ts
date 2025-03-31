@@ -17,6 +17,7 @@ import { CustomerFavoritedProductTypeOrm } from './persistence/typeorm/favorited
 @Module({
   imports: [ProductsModule],
   controllers: [CustomersController, FavoritesController],
+  exports: [CustomersService],
   providers: [
     {
       provide: CustomersRepository,
