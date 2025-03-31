@@ -4,7 +4,7 @@ import {
 } from '@customers/business/customers.service';
 import { Customer } from '@customers/domain/customer.entity';
 import { CustomerTypeOrm } from '@customers/persistence/typeorm/customer.typeorm';
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { randomUUID } from 'node:crypto';
 import * as request from 'supertest';
@@ -59,6 +59,7 @@ describe('AppController (e2e)', () => {
       name: 'John Dodoessos',
     });
   });
+
   describe('update', () => {
     it('should update existing customer with new name and email using /customer (PATH)', async () => {
       const [customer] = await insertUsers(dataSource, 1);
@@ -102,6 +103,16 @@ describe('AppController (e2e)', () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual(customer);
+  });
+
+  it('não deve permitir acesso aos dados de um customer que não seja o usuário logado using /customer/:id (GET)', async () => {
+    const [customer, customer2] = await insertUsers(dataSource, 2);
+
+    const response = await request(app.getHttpServer())
+      .get(`/customers/${customer.id}`)
+      .auth(getJwtToken(app, customer2), { type: 'bearer' });
+
+    expect(response.statusCode).toBe(HttpStatus.FORBIDDEN);
   });
 
   describe('find paginated TODO: somente deve permitir listagem para adminsitradores', () => {

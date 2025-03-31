@@ -11,6 +11,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   CreateCustomerRequest,
@@ -18,8 +19,10 @@ import {
 } from '../business/customers.service';
 import { Customer } from '../domain/customer.entity';
 import { UpdateCustomerRequest } from './dto/update-customer-request';
+import { OnlyOwnerCanAccessGuard } from './only-owner-can-access.guard';
 
 @Controller('customers')
+@UseGuards(OnlyOwnerCanAccessGuard)
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
