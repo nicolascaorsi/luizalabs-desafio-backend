@@ -1,5 +1,5 @@
-import { IS_PUBLIC_KEY } from '@auth/decorators/public.decorator';
-import { TokenData } from '@auth/token-data';
+import { IS_PUBLIC_KEY } from '@auth/api/decorators/public.decorator';
+import { TokenData } from '@auth/api/token-data';
 import {
   CanActivate,
   ExecutionContext,

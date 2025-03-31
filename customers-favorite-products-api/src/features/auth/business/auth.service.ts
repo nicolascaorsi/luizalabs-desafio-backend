@@ -1,13 +1,10 @@
+import { LoginRequest } from '@auth/api/dto/login-request';
+import { LoginResponse } from '@auth/api/dto/login-response';
 import { CustomersService } from '@customers/business/customers.service';
 import { NotFoundError } from '@errors/not-found-error';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { TokenData } from './token-data';
-
-export type LoginRequest = { email: string };
-export type LoginResponse = {
-  accessToken: string;
-};
+import { TokenData } from '../api/token-data';
 
 @Injectable()
 export class AuthService {

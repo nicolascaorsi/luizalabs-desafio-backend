@@ -2,9 +2,10 @@ import { CustomersModule } from '@customers/customers.module';
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthController } from './auth.controller';
-import { AuthGuard } from './auth.guard';
-import { AuthService } from './auth.service';
+import { AuthController } from './api/auth.controller';
+
+import { AuthGuard } from './api/auth.guard';
+import { AuthService } from './business/auth.service';
 
 @Module({
   imports: [

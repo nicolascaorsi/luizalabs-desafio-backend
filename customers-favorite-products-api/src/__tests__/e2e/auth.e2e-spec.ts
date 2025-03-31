@@ -2,10 +2,11 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { insertCustomer } from '../utils';
 
-import { TokenData } from '@auth/token-data';
+import { LoginRequest } from '@auth/api/dto/login-request';
+import { LoginResponse } from '@auth/api/dto/login-response';
+import { TokenData } from '@auth/api/token-data';
 import { Customer } from '@customers/domain/customer.entity';
 import { JwtService } from '@nestjs/jwt';
-import { LoginRequest, LoginResponse } from 'features/auth/auth.service';
 import * as request from 'supertest';
 import { App } from 'supertest/types';
 import { DataSource } from 'typeorm';

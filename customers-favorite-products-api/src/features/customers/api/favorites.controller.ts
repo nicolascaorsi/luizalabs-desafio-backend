@@ -5,18 +5,24 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiResponse } from '@nestjs/swagger';
 import { Product } from '@products/domain/product.entity';
 import { CustomersService } from '../business/customers.service';
 import { CreateFavoriteRequest } from './dto/create-favorite-request';
 import { OnlyOwnerCanAccessGuard } from './only-owner-can-access.guard';
 
 @Controller('customers/:id/favorites')
+@ApiResponse({
+  status: HttpStatus.NOT_FOUND,
+  description: 'Quando o customer solicitado não é encontrado',
+})
 @UseGuards(OnlyOwnerCanAccessGuard)
 export class FavoritesController {
   constructor(private readonly customersService: CustomersService) {}
