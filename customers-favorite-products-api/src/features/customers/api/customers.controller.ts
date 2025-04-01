@@ -1,8 +1,10 @@
 import { Public } from '@auth/api/decorators/public.decorator';
 import { CreateCustomerRequest } from '@customers/business/create-customer-request';
 import { CustomerNotFoundError } from '@customers/domain/customer-not-found-error';
+import { EmailDuplicatedError } from '@customers/domain/email-duplicated-error';
 import {
   Body,
+  ConflictException,
   Controller,
   Delete,
   Get,
@@ -32,7 +34,14 @@ export class CustomersController {
   async create(
     @Body() createCustomerRequest: CreateCustomerRequest,
   ): Promise<Customer> {
-    return await this.customersService.create(createCustomerRequest);
+    try {
+      return await this.customersService.create(createCustomerRequest);
+    } catch (e) {
+      if (e instanceof EmailDuplicatedError) {
+        throw new ConflictException(e.message);
+      }
+      throw e;
+    }
   }
 
   @Get()

@@ -12,7 +12,7 @@ import { AppModule } from '../../app.module';
 import { DatabaseModule } from '../../database/database.module';
 import { TestDataSource } from '../config/test-data-source';
 import { TestDatabaseModule } from '../config/test-database.module';
-import { getJwtToken } from '../utils';
+import { getJwtToken, insertCustomer } from '../utils';
 
 describe('AppController (e2e)', () => {
   jest.setTimeout(60000);
@@ -58,6 +58,23 @@ describe('AppController (e2e)', () => {
         name: 'John Dodoessos',
       });
     });
+
+    it('deve gerar um erro quando o email estiver duplicado /customer (POST)', async () => {
+      const [customer] = await insertCustomer(dataSource, 1);
+
+      const response = await request(app.getHttpServer())
+        .post('/customers')
+        .send(<CreateCustomerRequest>{
+          email: customer.email,
+          name: 'Outro nome',
+        });
+
+      expect(response.statusCode).toBe(HttpStatus.CONFLICT);
+      expect(response.body.message).toBe(
+        `O email ${customer.email} já está em uso.`,
+      );
+    });
+
     it('deve gerar um erro de validação quando o email for inválido e o nome forem', async () => {
       const response = await request(app.getHttpServer())
         .post('/customers')
@@ -77,7 +94,7 @@ describe('AppController (e2e)', () => {
 
   describe('update', () => {
     it('should update existing customer with new name and email using /customer (PATH)', async () => {
-      const [customer] = await insertUsers(dataSource, 1);
+      const [customer] = await insertCustomer(dataSource, 1);
       const dataToUpdate = <UpdateCustomerRequest>{
         email: 'updated@dodoe.com',
         name: 'Updated Name',
@@ -110,7 +127,7 @@ describe('AppController (e2e)', () => {
     });
   });
   it('should find a customer by id using /customer/:id (GET)', async () => {
-    const [customer] = await insertUsers(dataSource, 1);
+    const [customer] = await insertCustomer(dataSource, 1);
 
     const response = await request(app.getHttpServer())
       .get(`/customers/${customer.id}`)
@@ -121,7 +138,7 @@ describe('AppController (e2e)', () => {
   });
 
   it('não deve permitir acesso aos dados de um customer que não seja o usuário logado using /customer/:id (GET)', async () => {
-    const [customer, customer2] = await insertUsers(dataSource, 2);
+    const [customer, customer2] = await insertCustomer(dataSource, 2);
 
     const response = await request(app.getHttpServer())
       .get(`/customers/${customer.id}`)
@@ -132,7 +149,7 @@ describe('AppController (e2e)', () => {
 
   describe('find paginated TODO: somente deve permitir listagem para adminsitradores', () => {
     it.skip('should paginate with inserted order', async () => {
-      const customers = await insertUsers(dataSource, 3);
+      const customers = await insertCustomer(dataSource, 3);
 
       const page1Response = await request(app.getHttpServer())
         .get(`/customers?pageSize=2&page=1`)
@@ -152,7 +169,7 @@ describe('AppController (e2e)', () => {
 
   describe('find customer', () => {
     it('should find customer by given id', async () => {
-      const [customer] = await insertUsers(dataSource, 1);
+      const [customer] = await insertCustomer(dataSource, 1);
 
       const findResponse = await request(app.getHttpServer())
         .get(`/customers/${customer.id}`)
@@ -178,7 +195,7 @@ describe('AppController (e2e)', () => {
 
   describe('delete', () => {
     it('should delete customer by given id', async () => {
-      const [customer] = await insertUsers(dataSource, 1);
+      const [customer] = await insertCustomer(dataSource, 1);
 
       const findResponse = await request(app.getHttpServer())
         .delete(`/customers/${customer.id}`)
@@ -190,11 +207,3 @@ describe('AppController (e2e)', () => {
     });
   });
 });
-
-async function insertUsers(dataSource: TestDataSource, count: number) {
-  const customers = [...Array(count).keys()].map(
-    (i) => new Customer({ name: `User ${i}`, email: `email-${i}@mail.com` }),
-  );
-  await dataSource.getRepository(CustomerTypeOrm).insert(customers);
-  return customers.map((c) => new Customer(c));
-}
