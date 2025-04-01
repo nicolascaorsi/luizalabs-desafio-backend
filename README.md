@@ -184,12 +184,15 @@ HTTP Request → Controller → Service → Repository → Banco de Dados
   - ESLint para linting de código
   - Prettier para formatação de código
   - Lefthook para git hooks
+  - Wiremock para realizar o mock da API de produtos, uma vez que ela está fora do ar definitivamente.
 
 ## Melhorias futuras
 - [ ] Utilziar um API gateway para fazer autenticação do JWT e estudar a possibilidade de fazer a autorização também, além de politicas de rate limit e cache;
 - [ ] Utilizar um mecanismo de request coalesing ao se comunicar com a API de produtos, assim evitamos requisições duplicadas em paralelo;
 - [ ] Implementar perfis de usuários, onde o admin pode realizar qualquer operação;
-- [ ] Implementar mecanismo de atualização de produtos, hoje uma vez que as informações do produto são baixadas, elas nunca são atualizadas e informações como preço, titulo entre outras podem ser atualizadas.
+- [ ] Implementar mecanismo de atualização de produtos, hoje uma vez que as informações do produto são baixadas, elas nunca são atualizadas e informações como preço, titulo entre outras podem ser atualizadas;
+- [ ] Utilizar ids externos em vez de expor os ids das entidades da base;
 - [ ] Usar builders para criação de objetos para testes em vez de instanciar cada item 'na mão';
 - [ ] Estudar beneficios da adoção do fastify em vez do express para aumentar a capacidade de requisições simultaneas da API;
+- [ ] Traduzir mensagens de erro das validações dos campos (class-validator);
 - [ ] Utilizar um exception filter do NestJS para converter os erros que ocorrem nas camadas mais internas para seus respectivos erros em HTTP, como por exemplo o erro NotFound para um erro 404.
