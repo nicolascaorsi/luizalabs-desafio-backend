@@ -44,7 +44,7 @@ Quando existir um review para o produto, o mesmo será exibido por este disposit
 
 1. Clone o repositório:
 ```bash
-git clone <repository-url>
+git clone git@github.com:nicolascaorsi/luizalabs-desafio-backend.git
 cd customers-favorite-products-api
 ```
 
