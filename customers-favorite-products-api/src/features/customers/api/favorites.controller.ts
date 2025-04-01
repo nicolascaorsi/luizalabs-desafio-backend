@@ -12,12 +12,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { Product } from '@products/domain/product.entity';
 import { CustomersService } from '../business/customers.service';
 import { CreateFavoriteRequest } from './dto/create-favorite-request';
 import { OnlyOwnerCanAccessGuard } from './only-owner-can-access.guard';
 
+@ApiBearerAuth('JWT')
 @Controller('customers/:id/favorites')
 @ApiResponse({
   status: HttpStatus.NOT_FOUND,

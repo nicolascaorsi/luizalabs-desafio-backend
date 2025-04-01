@@ -7,7 +7,8 @@ import {
   FindPaginatedOptions,
   UpdateData,
 } from '../persistence/customers-repository';
-import { CreateCustomerRequest, CustomersService } from './customers.service';
+import { CreateCustomerRequest } from './create-customer-request';
+import { CustomersService } from './customers.service';
 
 export class CustomersServiceDefault implements CustomersService {
   constructor(

@@ -1,7 +1,4 @@
-import {
-  CreateCustomerRequest,
-  UpdateCustomerRequest,
-} from '@customers/business/customers.service';
+import { UpdateCustomerRequest } from '@customers/business/customers.service';
 import { Customer } from '@customers/domain/customer.entity';
 import { CustomerTypeOrm } from '@customers/persistence/typeorm/customer.typeorm';
 import { HttpStatus, INestApplication } from '@nestjs/common';
@@ -44,19 +41,36 @@ describe('AppController (e2e)', () => {
     await dataSource.synchronize(true);
   });
 
-  it('should insert new customer using /customer (POST)', async () => {
-    const response = await request(app.getHttpServer())
-      .post('/customers')
-      .send(<CreateCustomerRequest>{
+  describe('/customer (POST)', () => {
+    it('should insert new customer using /customer (POST)', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/customers')
+        .send(<CreateCustomerRequest>{
+          email: 'john.doe@dodoe.com',
+          name: 'John Dodoessos',
+        });
+
+      expect(response.statusCode).toBe(201);
+      expect(response.body).toEqual(<Customer>{
+        id: expect.any(String),
         email: 'john.doe@dodoe.com',
         name: 'John Dodoessos',
       });
+    });
+    it('deve gerar um erro de validação quando o email for inválido e o nome forem', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/customers')
+        .send(<CreateCustomerRequest>{
+          email: 'john.doe@dodoe.com',
+          name: 'John Dodoessos',
+        });
 
-    expect(response.statusCode).toBe(201);
-    expect(response.body).toEqual(<Customer>{
-      id: expect.any(String),
-      email: 'john.doe@dodoe.com',
-      name: 'John Dodoessos',
+      expect(response.statusCode).toBe(201);
+      expect(response.body).toEqual(<Customer>{
+        id: expect.any(String),
+        email: 'john.doe@dodoe.com',
+        name: 'John Dodoessos',
+      });
     });
   });
 

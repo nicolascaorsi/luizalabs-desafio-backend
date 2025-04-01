@@ -5,13 +5,7 @@ import {
 } from '@customers/persistence/customers-repository';
 import { Product } from '@products/domain/product.entity';
 import { Customer } from '../domain/customer.entity';
-
-export class CreateCustomerRequest {
-  name: string;
-  email: string;
-}
-
-export type UpdateCustomerRequest = UpdateData;
+import { CreateCustomerRequest } from './create-customer-request';
 
 export type FindCustomerOptions = FindOptions;
 

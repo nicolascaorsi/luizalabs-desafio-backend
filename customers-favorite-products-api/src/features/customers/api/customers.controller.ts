@@ -1,4 +1,5 @@
 import { Public } from '@auth/api/decorators/public.decorator';
+import { CreateCustomerRequest } from '@customers/business/create-customer-request';
 import { CustomerNotFoundError } from '@customers/domain/customer-not-found-error';
 import {
   Body,
@@ -14,13 +15,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { CustomersService } from '../business/customers.service';
 import { Customer } from '../domain/customer.entity';
-import { CreateCustomerRequest } from './dto/create-customer-request';
 import { UpdateCustomerRequest } from './dto/update-customer-request';
 import { OnlyOwnerCanAccessGuard } from './only-owner-can-access.guard';
 
+@ApiBearerAuth('JWT')
 @Controller('customers')
 @UseGuards(OnlyOwnerCanAccessGuard)
 export class CustomersController {
