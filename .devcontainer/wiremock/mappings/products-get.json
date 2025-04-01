@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPathPattern": "/products/([0-9]+)"
+    "urlPathPattern": "/products/([0-9a-z]+)"
   },
   "response": {
     "status": 200,
