@@ -1,4 +1,3 @@
-import { CreateCustomerRequest } from '@customers/api/dto/create-customer-request';
 import { Customer } from '@customers/domain/customer.entity';
 import {
   CustomersRepository,
@@ -8,6 +7,7 @@ import {
 import { ProductsService } from '@products/business/products.service';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
+import { CreateCustomerRequest } from '../create-customer-request';
 import { CustomersServiceDefault } from '../customers.service.default';
 
 describe('CustomersServiceDefault', () => {

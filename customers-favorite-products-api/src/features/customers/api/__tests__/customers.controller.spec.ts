@@ -1,3 +1,4 @@
+import { CreateCustomerRequest } from '@customers/business/create-customer-request';
 import { CustomersService } from '@customers/business/customers.service';
 import { Customer } from '@customers/domain/customer.entity';
 import { FindPaginatedOptions } from '@customers/persistence/customers-repository';
@@ -6,7 +7,6 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 import { randomUUID } from 'node:crypto';
 import { CustomersController } from '../customers.controller';
-import { CreateCustomerRequest } from '../dto/create-customer-request';
 import { UpdateCustomerRequest } from '../dto/update-customer-request';
 
 describe('CustomersController', () => {

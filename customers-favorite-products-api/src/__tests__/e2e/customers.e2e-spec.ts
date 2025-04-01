@@ -1,4 +1,5 @@
-import { UpdateCustomerRequest } from '@customers/business/customers.service';
+import { UpdateCustomerRequest } from '@customers/api/dto/update-customer-request';
+import { CreateCustomerRequest } from '@customers/business/create-customer-request';
 import { Customer } from '@customers/domain/customer.entity';
 import { CustomerTypeOrm } from '@customers/persistence/typeorm/customer.typeorm';
 import { HttpStatus, INestApplication } from '@nestjs/common';
