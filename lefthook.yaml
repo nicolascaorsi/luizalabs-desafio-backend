@@ -1,44 +1,22 @@
-# EXAMPLE USAGE:
-#
 #   Refer for explanation to following link:
 #   https://lefthook.dev/configuration/
-#
-# pre-push:
-#   jobs:
-#     - name: packages audit
-#       tags:
-#         - frontend
-#         - security
-#       run: yarn audit
-#
-#     - name: gems audit
-#       tags:
-#         - backend
-#         - security
-#       run: bundle audit
-#
 pre-commit:
+  parallel: true
   jobs:
+    - name: build
+      root: "customers-favorite-products-api"
+      run: npm run build
     - name: lint
       root: "customers-favorite-products-api"
       glob: "*.{js,ts,jsx,tsx}"
       run: npm exec eslint -- --fix {staged_files}
       stage_fixed: true
-#
-#     - name: rubocop
-#       glob: "*.rb"
-#       exclude:
-#         - config/application.rb
-#         - config/routes.rb
-#       run: bundle exec rubocop --force-exclusion {all_files}
-#
-#     - name: govet
-#       files: git ls-files -m
-#       glob: "*.go"
-#       run: go vet {files}
-#
-#     - script: "hello.js"
-#       runner: node
-#
-#     - script: "hello.go"
-#       runner: go run
+    - name: unit-tests
+      root: "customers-favorite-products-api/"
+      run: npm run test -- --passWithNoTests {staged_files}
+    - name: integration-tests
+      root: "customers-favorite-products-api/"
+      run: npm run test:integration -- --passWithNoTests {staged_files}
+    - name: e2e-tests
+      root: "customers-favorite-products-api/"
+      run: npm run test:e2e -- --passWithNoTests {staged_files}
