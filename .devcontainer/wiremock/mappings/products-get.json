@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPathPattern": "/products/^(?!1f32f2a0-ef7d-4db9-96de-78d3f3fbc02d$)([0-9a-z-]+)$"
+    "urlPathPattern": "/products/(?!1f32f2a0-ef7d-4db9-96de-78d3f3fbc02d$)([0-9a-z-]+)"
   },
   "response": {
     "status": 200,
