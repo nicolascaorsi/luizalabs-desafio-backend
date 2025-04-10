@@ -85,13 +85,14 @@ describe('Favorites (e2e)', () => {
   });
 
   it('Um produto não pode ser adicionado em uma lista caso ele não exista', async () => {
+    const notExistingProductId = '1f32f2a0-ef7d-4db9-96de-78d3f3fbc02d';
     const [customer] = await insertCustomer(dataSource, 1);
 
     const response = await request(app.getHttpServer())
       .post(`/customers/${customer.id}/favorites`)
       .auth(getJwtToken(app, customer), { type: 'bearer' })
       .send(<CreateFavoriteRequest>{
-        productId: randomUUID(),
+        productId: notExistingProductId,
       });
 
     expect(response.statusCode).toBe(404);
